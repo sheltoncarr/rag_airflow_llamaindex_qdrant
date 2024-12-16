@@ -2,26 +2,24 @@
 
 ![Logos](assets/logos.png)
 
----
-
 ## Overview
 
-Welcome to this repository! The purpose of this project is to demonstrate how to implement Retrieval-Augmented Generation (RAG) using Apache Airflow for orchestration, LlamaIndex for document indexing, and Qdrant for vector search. For a complete explanation, please check out my Medium article about this project [here]()!
+Welcome to this repository! The purpose of this project is to demonstrate how to implement Retrieval-Augmented Generation (RAG) using Apache Airflow for orchestration, LlamaIndex for document indexing, and Qdrant for vector search. For a complete explanation, please check out my Medium article about this project [here](https://medium.com/@sheltoncarr/rag-with-apache-airflow-llamaindex-and-qdrant-d6077c6e0e7f)!
+
+![RAG System Architecture](assets/rag_system_architecture.png "RAG System Architecture")
 
 To keep things simple, this project utilizes a free Qdrant Cloud cluster, Airflow running locally with Docker, and a local Streamlit frontend for demonstrations.
 
-The RAG system uses hybrid search (dense and sparse embeddings) and re-ranking for retrieval.
+The RAG system uses hybrid search (dense and sparse embeddings) and re-ranking for retrieval. The system also comes with a fully automated RAG response evaluation pipeline.
 
 This project has two Airflow DAGs (Directed Acyclic Graphs): 
 
-1. `airflow/dags/arxiv_etl_pipeline.py`: An ETL pipeline that will pull the latest machine research learning papers from arXiv, chunk them, embed them, and upload them to Qdrant. This pipeline can be modified to accommodate other data sources as well, based on your specific use case.
-2. `airflow/dags/rag_evaluation_pipeline.py`: An automated RAG evaluation pipeline that generates questions based on the Qdrant knowledge base, answers those questions using our RAG system, and then uses an evaluation LLM to score the responses based on faithfulness and relevancy to the generated questions.
+1. `airflow/dags/arxiv_etl_pipeline.py`: An ETL pipeline that will pull the latest machine learning research papers from arXiv, chunk them, embed them, and upload them to Qdrant. The document processing is handled by LlamaIndex using a Document object.
+2. `airflow/dags/rag_evaluation_pipeline.py`: An automated RAG response evaluation pipeline that generates questions based on the Qdrant knowledge base, answers those questions using the RAG system, and then uses an evaluation LLM to score the responses based on faithfulness and relevancy to the generated questions. Finally, the DAG will return summary metrics of the RAG system’s performance.
 
-In a production setting, these DAGs can be scheduled to run daily to maintain a current Qdrant knowledge base and a fully automated RAG evaluation pipeline for production monitoring.
+In a production setting, these DAGs can be ran on a custom schedule to maintain a current Qdrant knowledge base and a fully automated RAG response evaluation pipeline for production monitoring. These pipelines can be modified to accommodate other data sources and evaluation metrics as well, based on your specific use case.
 
 To demo the project, I set up a simple Streamlit frontend that can use our RAG system to answer questions about the knowledge base created in Qdrant. It can also demonstrate the automated evaluation pipeline at the click of a button.
-
----
 
 ## Running This Repository Locally
 
@@ -35,7 +33,7 @@ You can get a free Qdrant Cloud cluster by following these steps in the official
 
 Once you have the above requirements set up, you can run this project locally by first git cloning this repository and pip installing the `requirements.txt` file located in the root of the repository (there's a separate `requirements.txt` file in the `airflow` folder for running the Airflow DAGs using Docker). Then, create a `.env` file in the root of the repository using the provided `.env_example.txt` file as a guide. Optionally, you can create an additional `.env` file in the `airflow` folder using the `.env_example.txt` in the `airflow` folder as a guide. This `.env` file silences a docker-compose warning that can be safely ignored. See [here](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#setting-the-right-airflow-user) for details.
 
-To launch Docker using the docker-compose.yaml file, navigate to the `airflow` folder in the terminal and run the the following command:
+To launch Docker using the `docker-compose.yaml` file, navigate to the `airflow` folder in the terminal and run the the following command:
 
 `docker compose up --build`
 
@@ -103,4 +101,4 @@ Once you are finished, be sure to clean up your workspace by following these ste
     `docker compose down --volumes --rmi all`
 
 
-Please check out my Medium article about this project [here]() for more details!
+Please check out my Medium article about this project [here](https://medium.com/@sheltoncarr/rag-with-apache-airflow-llamaindex-and-qdrant-d6077c6e0e7f) for more details!
