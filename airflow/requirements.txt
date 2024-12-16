@@ -1,0 +1,13 @@
+arxiv
+pymupdf
+requests
+llama-index
+llama-index-vector-stores-qdrant
+llama-index-embeddings-huggingface
+apache-airflow-providers-qdrant
+qdrant_client
+torch
+transformers
+openai
+llama-index-embeddings-fastembed
+fastembed

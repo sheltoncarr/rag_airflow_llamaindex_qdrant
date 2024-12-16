@@ -1,0 +1,12 @@
+*.env
+*_env
+venv*
+*venv
+__pycache__/
+*.DS_Store
+logs/
+airflow/standalone_admin_password.txt
+airflow.db
+*.ipynb
+airflow.cfg
+webserver_config.py
